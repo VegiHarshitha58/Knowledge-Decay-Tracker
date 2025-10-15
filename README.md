@@ -102,7 +102,7 @@ Knowledge-Decay-Tracker/
 
  ## 📝 Usage Instructions
 
- -Add technical knowledge items or tasks to track.
+-Add technical knowledge items or tasks to track.
 
  -Monitor retention over time across team members.
 
