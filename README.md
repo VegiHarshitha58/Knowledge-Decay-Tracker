@@ -104,10 +104,12 @@ Add/view knowledge items,
 ---
 
 ## 📁 Folder Structure
-Knowledge-Decay-Tracker/
+
+Knowledge Decay Tracker/
 │
 ├── backend/
-│    └── app.py,data.json
+│    ├── app.py
+│    └── data.json
 │
 ├── frontend/
 │    └── index.html
