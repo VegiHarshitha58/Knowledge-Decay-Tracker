@@ -98,7 +98,7 @@ Go to the frontend folder: Knowledge-Decay-Tracker/frontend
 8. **Interact with the app-**
 Add/view knowledge items,
 
-      Monitor retention and decay across your team
+      Monitor retention and decay across your team.
 
 
 ---
