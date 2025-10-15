@@ -32,6 +32,8 @@ This tool is especially useful for:
 - **Backend:** Python, Flask  
 - **Data Storage:** CSV / Local files  
 
+---
+
 ## 🚀 How to Run Locally (Windows)
 
 Follow these steps to run the Knowledge Decay Tracker on your local machine:
@@ -41,17 +43,17 @@ git clone https://github.com/VegiHarshitha58/Knowledge-Decay-Tracker.git
 By doing this, you will get the project folder in your system.
 
 
-2. **Navigate to the backend folder**
+3. **Navigate to the backend folder**
 open the command prompt add the path of the backend folder like below,
 cd Knowledge-Decay-Tracker/backend
 
 
-3. **Create a virtual environment (optional but recommended)**
+4. **Create a virtual environment (optional but recommended)**
 python -m venv venv
 By using the above code, you can create virtual environment
 
 
-4. **Activate the virtual environment**
+5. **Activate the virtual environment**
 On Windows Command Prompt:
 venv\Scripts\activate
 On Windows PowerShell:
@@ -60,30 +62,30 @@ You should see (venv) appear in your terminal prompt, indicating the virtual env
 
 
 
-5. **Install required dependencies**
+6. **Install required dependencies**
 pip install flask
 This installs flask which is used for running the backend
 
 
-6. **Run the backend**
+7. **Run the backend**
 python app.py
 You should see a message like:
 Running on http://127.0.0.1:5000
 By clicking you can see how backend works for this tool.
 
 
-7. **Open the frontend**
+8. **Open the frontend**
 Go to the frontend folder: Knowledge-Decay-Tracker/frontend
 Open index.html in your browser
 Or use VS Code Live Server for a live reload experience
 This shows the exact website of the knowledge decay tracker.
 
-8. **Interact with the app**
+9. **Interact with the app**
 Add/view knowledge items
 Monitor retention and decay across your team
 
 
-
+---
 
 ## 📁 Folder Structure
 Knowledge-Decay-Tracker/
@@ -96,29 +98,34 @@ Knowledge-Decay-Tracker/
 │
 └── README.md
 
+---
+
  ## 📝 Usage Instructions
 
-Add technical knowledge items or tasks to track.
+ -Add technical knowledge items or tasks to track.
 
-Monitor retention over time across team members.
+ -Monitor retention over time across team members.
 
-Update data regularly to maintain accuracy and prevent knowledge gaps.
+ -Update data regularly to maintain accuracy and prevent knowledge gaps.
 
+---
 
 ## ⚡ Notes
 
-Prototype developed for Hack2Skill SuperHack 2025.
+ -Prototype developed for Hack2Skill SuperHack 2025.
 
-Backend runs locally using Flask.
+ -Backend runs locally using Flask.
 
-Frontend can be opened directly in the browser.
+ -Frontend can be opened directly in the browser.
 
-Full deployment requires a live hosting solution.
+ -Full deployment requires a live hosting solution.
+
+---
 
 ## 🎯 Future Enhancements
 
-Add user authentication for multiple team members
+ -Add user authentication for multiple team members
 
-Integrate a database for scalable storage and analytics
+ -Integrate a database for scalable storage and analytics
 
 Deploy a live web version accessible online for team-wide use
