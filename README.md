@@ -53,51 +53,51 @@ open the command prompt add the path of the backend folder like below,
 3. **Create a virtual environment (optional but recommended)-**
 python -m venv venv
 
-      By using the above code, you can create virtual environment
+      By using the above code, you can create virtual environment.
 
 
 4. **Activate the virtual environment-**
- On Windows Command Prompt:
+     On Windows Command Prompt:
 
-  venv\Scripts\activate
+     venv\Scripts\activate
 
-  On Windows PowerShell:
+     On Windows PowerShell:
 
-  .\venv\Scripts\Activate.ps1
+     .\venv\Scripts\Activate.ps1
 
-   You should see (venv) appear in your terminal prompt, indicating the virtual environment is active.
+     You should see (venv) appear in your terminal prompt, indicating the virtual environment is active.
 
 
 
 5. **Install required dependencies-**
   pip install flask
 
-  This installs flask which is used for running the backend
+      This installs flask which is used for running the backend.
 
 
 6. **Run the backend-**
-python app.py
+  python app.py
 
-You should see a message like:
+      You should see a message like:
 
-Running on http://127.0.0.1:5000
+      Running on http://127.0.0.1:5000
 
-By clicking you can see how backend works for this tool.
+      By clicking you can see how backend works for this tool.
 
 
 7. **Open the frontend-**
 Go to the frontend folder: Knowledge-Decay-Tracker/frontend
 
-Open index.html in your browser
+      Open index.html in your browser
 
-Or use VS Code Live Server for a live reload experience
+      Or use VS Code Live Server for a live reload experience
 
-This shows the exact website of the knowledge decay tracker.
+      This shows the exact website of the knowledge decay tracker.
 
 8. **Interact with the app-**
 Add/view knowledge items,
 
-Monitor retention and decay across your team
+      Monitor retention and decay across your team
 
 
 ---
