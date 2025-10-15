@@ -33,7 +33,7 @@ This tool is especially useful for:
 - **Data Storage:** CSV / Local files  
 
 ---
-
+ 
 ## 🚀 How to Run Locally (Windows)
 
 Follow these steps to run the Knowledge Decay Tracker on your local machine:
@@ -41,22 +41,22 @@ Follow these steps to run the Knowledge Decay Tracker on your local machine:
 1. **Clone the repository-**
 git clone https://github.com/VegiHarshitha58/Knowledge-Decay-Tracker.git
 
-  By doing this, you will get the project folder in your system.
+      By doing this, you will get the project folder in your system.
 
 
-2. **Navigate to the backend folder**
+2. **Navigate to the backend folder-**
 open the command prompt add the path of the backend folder like below,
 
   cd Knowledge-Decay-Tracker/backend
 
 
-3. **Create a virtual environment (optional but recommended)**
+3. **Create a virtual environment (optional but recommended)-**
 python -m venv venv
 
   By using the above code, you can create virtual environment
 
 
-4. **Activate the virtual environment**
+4. **Activate the virtual environment-**
  On Windows Command Prompt:
 
   venv\Scripts\activate
@@ -69,13 +69,13 @@ python -m venv venv
 
 
 
-5. **Install required dependencies**
+5. **Install required dependencies-**
   pip install flask
 
   This installs flask which is used for running the backend
 
 
-6. **Run the backend**
+6. **Run the backend-**
 python app.py
 
 You should see a message like:
@@ -85,7 +85,7 @@ Running on http://127.0.0.1:5000
 By clicking you can see how backend works for this tool.
 
 
-7. **Open the frontend**
+7. **Open the frontend-**
 Go to the frontend folder: Knowledge-Decay-Tracker/frontend
 
 Open index.html in your browser
@@ -94,7 +94,7 @@ Or use VS Code Live Server for a live reload experience
 
 This shows the exact website of the knowledge decay tracker.
 
-8. **Interact with the app**
+8. **Interact with the app-**
 Add/view knowledge items,
 
 Monitor retention and decay across your team
