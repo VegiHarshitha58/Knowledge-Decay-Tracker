@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "name": "Harshitha",
+        "role": "IT Support Engineer",
+        "decay_days": 60,
+        "join_date": "2023-05-01",
+        "problems_solved": [
+            {
+                "problem": "Server Down",
+                "solution": "Restarted Apache Service",
+                "last_used": "2025-06-01"
+            },
+            {
+                "problem": "Network Latency",
+                "solution": "Reconfigured DNS",
+                "last_used": "2025-09-30"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Kiran",
+        "role": "SME | Senior MSP Engineer",
+        "decay_days": 30,
+        "join_date": "2024-02-10",
+        "problems_solved": [
+            {
+                "problem": "Email Outage",
+                "solution": "Reset SMTP configuration",
+                "last_used": "2025-07-12"
+            }
+        ]
+    }
+]

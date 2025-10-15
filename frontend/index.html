@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Knowledge Decay Tracker</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; padding: 30px; margin:0; }
+    h1 { color: #2d6cdf; }
+    .controls { margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .employee-card { background: white; padding: 20px; margin: 10px 0; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer; }
+    .employee-card:hover { transform: translateY(-3px); }
+    .problem { background: #eef; margin: 5px 0; padding: 10px; border-radius: 8px; border-left: 5px solid #2d6cdf; }
+    .problem.collapsed .details { display: none; }
+    .problem-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    #alerts { background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #ffe0a3; transition: all 0.3s ease; }
+    .alert-item { padding: 8px 0; border-bottom: 1px dashed #ffd89c; display: flex; justify-content: space-between; align-items: center; }
+    .alert-item:last-child { border-bottom: none; }
+    .revisit-btn, .edit-btn, .export-btn { background-color: #dc3545; color: white; border: none; padding: 6px 10px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
+    .revisit-btn:hover, .edit-btn:hover, .export-btn:hover { background-color: #c82333; }
+    .progress-bar { height: 8px; border-radius: 5px; background-color: #ccc; margin-top:5px; overflow: hidden; }
+    .progress-fill { height:100%; border-radius:5px;}
+    #dashboard { background:white; padding:15px; border-radius:10px; margin-bottom:20px; box-shadow:0 2px 6px rgba(0,0,0,0.1); display:flex; gap:20px; flex-wrap:wrap;}
+    #add-solution-form-container { background: #e9ecef; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: none; }
+    .form-group label { display: block; margin-top: 10px; font-weight: bold; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; margin-top: 4px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+    .form-actions { margin-top: 15px; text-align: right; }
+    @media (max-width:768px){.controls{flex-direction:column;align-items:flex-start;}.employee-card{margin:10px 0;}}
+    mark{background-color: yellow;}
+  </style>
+</head>
+<body>
+
+<h1>💡 Knowledge Decay Tracker</h1>
+
+<!-- Dashboard Summary -->
+<div id="dashboard">
+    <div><b>Total Employees:</b> <span id="total-employees">0</span></div>
+    <div><b>Total Problems Solved:</b> <span id="total-problems">0</span></div>
+    <div><b>Active Alerts:</b> <span id="total-alerts">0</span></div>
+</div>
+
+<div class="controls">
+    <button onclick="showSection('employees')">View All Employees</button>
+    <button onclick="showSection('alerts')">Check Knowledge Decay</button>
+    <button onclick="showSection('add-solution')">+ Add New Solution</button>
+    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+    <input type="text" id="search-query" placeholder="Search problems or solutions..." onkeyup="searchKnowledge()" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; flex:1; min-width:200px;">
+</div>
+
+<!-- Add Solution Form -->
+<div id="add-solution-form-container">
+    <h2>Add New Solved Problem</h2>
+    <form id="add-solution-form">
+        <div class="form-group">
+            <label for="employee-select">Employee:</label>
+            <select id="employee-select" required></select>
+        </div>
+        <div class="form-group">
+            <label for="problem-input">Problem Title:</label>
+            <input type="text" id="problem-input" required>
+        </div>
+        <div class="form-group">
+            <label for="solution-input">Solution Steps:</label>
+            <textarea id="solution-input" rows="4" required></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Submit Solution</button>
+        </div>
+    </form>
+</div>
+
+<!-- Employees Section -->
+<div id="employees-container" style="display:none;">
+    <div id="employees"></div>
+</div>
+
+<!-- Alerts Section -->
+<div id="alerts-container" style="display:none;">
+    <div id="alerts"></div>
+</div>
+
+<script>
+// --- Correct API URL ---
+const API_URL = 'http://127.0.0.1:5000'; // Replace with your Flask server address if different
+
+// --- Toggle Sections ---
+function showSection(section){
+    const sections=['employees-container','alerts-container','add-solution-form-container'];
+    sections.forEach(id=>document.getElementById(id).style.display='none');
+
+    if(section==='employees'){document.getElementById('employees-container').style.display='block'; loadEmployees();}
+    else if(section==='alerts'){document.getElementById('alerts-container').style.display='block'; checkDecay();}
+    else if(section==='add-solution'){toggleAddSolutionForm();}
+}
+
+// --- Populate employee dropdown ---
+async function populateEmployeeDropdown(){
+    const select=document.getElementById('employee-select'); select.innerHTML='';
+    const res=await fetch(`${API_URL}/employees`);
+    if(!res.ok){alert('Failed to fetch employees'); return;}
+    const data=await res.json();
+    data.forEach(emp=>{
+        const option=document.createElement('option');
+        option.value=emp.id;
+        option.textContent=`${emp.name} (${emp.role})`;
+        select.appendChild(option);
+    });
+}
+
+// --- Toggle Add Solution form ---
+function toggleAddSolutionForm(){
+    const formContainer=document.getElementById('add-solution-form-container');
+    const isVisible=formContainer.style.display==='block';
+    formContainer.style.display=isVisible?'none':'block';
+    if(!isVisible) populateEmployeeDropdown();
+}
+
+// --- Submit new solution ---
+document.getElementById('add-solution-form').addEventListener('submit', async(e)=>{
+    e.preventDefault();
+    const empId=parseInt(document.getElementById('employee-select').value);
+    const problem=document.getElementById('problem-input').value;
+    const solution=document.getElementById('solution-input').value;
+    const res=await fetch(`${API_URL}/add_problem`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:empId,problem,solution})
+    });
+    const result=await res.json();
+    alert(result.message||result.error);
+    if(res.ok){document.getElementById('add-solution-form').reset(); toggleAddSolutionForm(); loadEmployees(); checkDecay();}
+});
+
+// --- Highlight search keywords ---
+function highlight(text){
+    const query=document.getElementById('search-query').value.trim();
+    if(!query) return text;
+    const regex=new RegExp(`(${query})`,'gi');
+    return text.replace(regex,'<mark>$1</mark>');
+}
+
+// --- Calculate progress and color for decay ---
+function calcProgress(lastUsed,thresholdDays){
+    const last=new Date(lastUsed); const today=new Date();
+    const diff=Math.floor((today-last)/(1000*60*60*24));
+    return Math.min((diff/thresholdDays)*100,100);
+}
+function calcColor(lastUsed,thresholdDays){
+    const progress=calcProgress(lastUsed,thresholdDays);
+    if(progress<70) return 'green';
+    else if(progress<100) return 'orange';
+    else return 'red';
+}
+
+// --- Load employees ---
+async function loadEmployees(url=`${API_URL}/employees`){
+    const res=await fetch(url); if(!res.ok){alert('Failed to load employees'); return;}
+    const data=await res.json();
+    let html=''; let totalProblems=0;
+    data.forEach(emp=>{
+        totalProblems+=emp.problems_solved.length;
+        html+=`<div class='employee-card'>
+            <h3>${emp.name} (${emp.role})</h3>
+            <p><b>Threshold:</b> ${emp.decay_days} days | <b>Joined:</b> ${emp.join_date}</p>
+            <h4>Problems Solved:</h4>
+            ${emp.problems_solved.map((p,i)=>`
+                <div class='problem'>
+                    <div class="problem-header">
+                        <span>${highlight(p.problem)} — ${highlight(p.solution)}</span>
+                    </div>
+                    <div class="details">
+                        <small>Last Used: ${p.last_used}</small>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:${calcProgress(p.last_used,emp.decay_days)}%;background-color:${calcColor(p.last_used,emp.decay_days)}"></div>
+                        </div>
+                    </div>
+                </div>`).join('')}
+        </div>`;
+    });
+    document.getElementById('employees').innerHTML=html||'<p>No employees or problems found.</p>';
+    document.getElementById('total-employees').textContent=data.length;
+    document.getElementById('total-problems').textContent=totalProblems;
+}
+
+// --- Search knowledge ---
+function searchKnowledge(){
+    const query=document.getElementById('search-query').value.trim();
+    const url=query?`${API_URL}/search_knowledge?q=${encodeURIComponent(query)}`:`${API_URL}/employees`;
+    loadEmployees(url);
+    showSection('employees');
+}
+
+// --- Check decay alerts ---
+async function checkDecay(){
+    const res=await fetch(`${API_URL}/knowledge_decay`);
+    if(!res.ok){alert('Failed to load decay alerts'); return;}
+    const data=await res.json();
+    const alertsDiv=document.getElementById('alerts'); document.getElementById('total-alerts').textContent=data.length;
+    if(data.length===0){alertsDiv.innerHTML="<h3>✅ Knowledge Health</h3><p><b>No decay detected!</b></p>"; return;}
+    let msg="<h3>⚠️ Knowledge Decay Alerts</h3>";
+    data.forEach(a=>{
+        msg+=`<div class='alert-item'>
+            <span>${a.employee} → ${a.message} (Threshold: ${a.threshold_days} days)</span>
+            <button class="revisit-btn" onclick="revisitSolution(${a.emp_id},${a.problem_index})">Mark as Re-visited</button>
+        </div>`;
+    });
+    alertsDiv.innerHTML=msg;
+}
+
+// --- Revisit solution ---
+async function revisitSolution(empId,problemIndex){
+    const res=await fetch(`${API_URL}/revisit_solution`,{
+        method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({emp_id:empId,problem_index:problemIndex})
+    });
+    const result=await res.json(); alert(result.message||result.error);
+    if(res.ok){checkDecay(); loadEmployees();}
+}
+
+// --- Export CSV ---
+async function exportCSV(){
+    const res=await fetch(`${API_URL}/employees`);
+    if(!res.ok){alert('Failed to fetch employees for CSV'); return;}
+    const data=await res.json(); let csv='Name,Role,Threshold,Join Date,Problem,Solution,Last Used\n';
+    data.forEach(emp=>emp.problems_solved.forEach(p=>{
+        csv+=`${emp.name},${emp.role},${emp.decay_days},${emp.join_date},"${p.problem}","${p.solution}",${p.last_used}\n`;
+    }));
+    const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='employees_knowledge.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+// --- Initial load ---
+document.addEventListener('DOMContentLoaded',()=>{
+    showSection('employees'); // Show employees by default
+    populateEmployeeDropdown();
+    checkDecay();
+});
+</script>
+
+</body>
+</html>
