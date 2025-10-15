@@ -47,13 +47,13 @@ git clone https://github.com/VegiHarshitha58/Knowledge-Decay-Tracker.git
 2. **Navigate to the backend folder-**
 open the command prompt add the path of the backend folder like below,
 
-  cd Knowledge-Decay-Tracker/backend
+      cd Knowledge-Decay-Tracker/backend
 
 
 3. **Create a virtual environment (optional but recommended)-**
 python -m venv venv
 
-  By using the above code, you can create virtual environment
+      By using the above code, you can create virtual environment
 
 
 4. **Activate the virtual environment-**
